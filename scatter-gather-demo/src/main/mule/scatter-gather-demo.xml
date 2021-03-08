@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd 
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+
+<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="794d20dd-74b6-496e-9f9e-c153bd53ba2e" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<flow name="scattergathervariableflow" doc:id="94ab0b44-6a1f-4a2b-8ea7-606d48a8db99" >
+<http:listener doc:name="Listener" doc:id="2921352a-3bf3-4d90-a3bf-e15b3a148247" config-ref="HTTP_Listener_config" path="/variable"/>
+<set-variable variableName="var1" value="var1" doc:name="Set Variable var1"/>
+<set-variable variableName="var2" value="var2" doc:name="Set Variable var2"/>
+<scatter-gather doc:name="Scatter-Gather" doc:id="d95c6af2-b74c-447a-9346-956358deed61" >
+	<route >
+		<set-variable variableName="var2" value="newValue" doc:name="Set Variable var2"/>
+        		<set-variable variableName="var3" value="appleVal" doc:name="Set Variable var3"/>
+	</route>
+	<route >
+		<set-variable variableName="var3" value="bananaVal" doc:name="Set Variable var3"/>
+	</route>
+	<route >
+		<set-variable variableName="var3" value="otherVal" doc:name="Set Variable var3"/>
+        <set-variable variableName="var4" value="val4" doc:name="Set Variable var4"/>
+	</route>
+</scatter-gather>
+<ee:transform doc:name="Transform Message" doc:id="7d9da50e-a5ff-4007-a0fc-cff97df41bbc" >
+<ee:message >
+			<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]>
+</ee:set-payload>
+	</ee:message>
+</ee:transform>
+</flow>
+
+
+</mule>
